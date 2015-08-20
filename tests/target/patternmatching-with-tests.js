@@ -103,19 +103,6 @@
 //# sourceMappingURL=maps\index.js.map
 
 },{"./atomFactory":2,"./caseFactory":4,"./match":6}],6:[function(require,module,exports){
-
-/*
-test = (_case,value) ->
-  _case(value)
-match = (value) ->
-  () ->
-    _casesTuple = [].slice.call(arguments,0)
-    for _caseTuple in _casesTuple
-      if test(_caseTuple[0],value)
-        return _caseTuple[1](value)
-module.exports = match
- */
-
 (function() {
   var Case, match;
 
