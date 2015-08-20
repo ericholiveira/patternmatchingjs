@@ -1,0 +1,23 @@
+{
+  "name": "patternmatching",
+  "version": "1.0.0",
+  "description": "Pattern matching implementation for javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Erich Oliveira",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt-cli": "0.1.13",
+    "grunt": "0.4.x",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-coffeelint": "0.0.13",
+    "coffee-script": "1.8.0",
+    "grunt-contrib-coffee": "0.11.1",
+    "grunt-contrib-jasmine": "0.8.1",
+    "grunt-browserify": "3.1.0",
+    "grunt-release": "0.7.0",
+    "grunt-jasmine-node": "0.2.1"
+  }
+}
