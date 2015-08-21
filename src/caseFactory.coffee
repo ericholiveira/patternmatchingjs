@@ -1,8 +1,14 @@
 Case = require('./case')
-Atom = require('./atom')
-module.exports = (pattern,resultBuilder)->
-  patternFunction = (i) -> `i==pattern`
-  patternFunction = pattern if typeof pattern == 'function'
-  patternFunction = ((i) ->i==pattern.value) if pattern instanceof Atom
-  patternFunction = ((i) -> pattern.test(i)) if pattern instanceof RegExp
-  new Case(patternFunction,resultBuilder)
+caseFactory = (pattern,resultBuilder)->
+  _case = new Case(pattern,resultBuilder)
+  result = (value)->
+    if typeof value == 'function' and value._isCase
+      result._case = result._case.combine(value._case)
+      result
+    else
+      result._case.test(value)
+  result._isCase = true
+  result._case = _case
+  result
+
+module.exports = caseFactory
