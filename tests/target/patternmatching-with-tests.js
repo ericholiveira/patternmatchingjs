@@ -31,19 +31,18 @@
 
 },{"./atom":1}],3:[function(require,module,exports){
 (function() {
-  var Atom, Case, Fail;
+  var Atom, Case, ComposedCase, Fail,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Atom = require('./atom');
 
   Fail = require('./fail');
 
   Case = (function() {
-    function Case(pattern, resultBuilder, previous) {
+    function Case(pattern, resultBuilder, left) {
       var patternFunction;
-      if (previous == null) {
-        previous = [];
-      }
-      this._all = previous.concat(this);
+      this._all = [this];
       patternFunction = function(i) {
         return i==pattern;
       };
@@ -85,12 +84,29 @@
     };
 
     Case.prototype.combine = function(_case) {
-      return new Case(_case.pattern, _case.resultBuilder, this._all);
+      return new ComposedCase(this._all, _case._all);
     };
 
     return Case;
 
   })();
+
+  ComposedCase = (function(_super) {
+    __extends(ComposedCase, _super);
+
+    function ComposedCase(left, right) {
+      if (left == null) {
+        left = [];
+      }
+      if (right == null) {
+        right = [];
+      }
+      this._all = left.concat(right);
+    }
+
+    return ComposedCase;
+
+  })(Case);
 
   module.exports = Case;
 
@@ -213,6 +229,17 @@ describe("A case", function() {
     expect(f(3)).toBe(3);
     expect(f(4)).toBe(4);
     expect(f(5)).toBe(5);
+  });
+  it("must be accept multiple compositions", function() {
+    var f34 = PM.case(3, 3);
+    f34 = f34(PM.case(4, 4));
+    var f56 = PM.case(5, 5);
+    f56 = f56(PM.case(6, 6));
+    var f3456 = f34(f56);
+    expect(f3456(3)).toBe(3);
+    expect(f3456(4)).toBe(4);
+    expect(f3456(5)).toBe(5);
+    expect(f3456(6)).toBe(6);
   });
 });
 },{"../compiled/index":6}],9:[function(require,module,exports){
