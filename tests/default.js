@@ -33,7 +33,7 @@ describe("The default behaviour", function() {
     expect(PM.match(3)(PM.case(PM.atom(3), function(i) {
       return i + 2;
     }))).toBe(5);
-    expect(PM.match(3)(PM.case(PM.atom("3"), function(i) {
+    expect(PM.match(3)(PM.case(PM.atom("4"), function(i) {
       return i + 2;
     }))).toBeUndefined();
   });

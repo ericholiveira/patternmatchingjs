@@ -5,5 +5,7 @@ describe("A pattern matching", function() {
     expect(PM).toBeDefined();
     expect(PM.match).toBeDefined();
     expect(PM.case).toBeDefined();
+    expect(PM.default).toBeDefined();
+    expect(PM.default).toBeDefined();
   });
 });
