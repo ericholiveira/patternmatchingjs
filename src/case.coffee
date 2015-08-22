@@ -2,6 +2,7 @@ Atom = require('./atom')
 Fail = require('./fail')
 Default = require('./Default')
 ArrayUtil = require('./arrayUtil')
+isThenable = (value)-> value and typeof value == 'object' and typeof value.then =='function'
 class Case
   constructor:(pattern,resultBuilder,left) ->
     @_all = [@]
@@ -22,6 +23,7 @@ class Case
     else
       @resultBuilder = ()->resultBuilder
   test: (value)->
+    return value.then((v) => @test(v)) if isThenable(value)
     for _case in @_all
       if _case.pattern.call(value,value)
         return _case.resultBuilder.call(value,value)
