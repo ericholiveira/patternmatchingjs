@@ -1,5 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
+  var Fail;
+
+  module.exports = Fail = (function() {
+    function Fail() {}
+
+    return Fail;
+
+  })();
+
+}).call(this);
+
+//# sourceMappingURL=maps\default.js.map
+
+},{}],2:[function(require,module,exports){
+(function() {
   module.exports.isArray = Array.isArray || function(value) {
     return {}.toString.call(value) === '[object Array]';
   };
@@ -8,7 +23,7 @@
 
 //# sourceMappingURL=maps\arrayUtil.js.map
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function() {
   var Atom;
 
@@ -25,7 +40,7 @@
 
 //# sourceMappingURL=maps\atom.js.map
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function() {
   var Atom;
 
@@ -39,15 +54,17 @@
 
 //# sourceMappingURL=maps\atomFactory.js.map
 
-},{"./atom":2}],4:[function(require,module,exports){
+},{"./atom":3}],5:[function(require,module,exports){
 (function() {
-  var ArrayUtil, Atom, Case, ComposedCase, Fail,
+  var ArrayUtil, Atom, Case, ComposedCase, Default, Fail,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Atom = require('./atom');
 
   Fail = require('./fail');
+
+  Default = require('./Default');
 
   ArrayUtil = require('./arrayUtil');
 
@@ -88,6 +105,11 @@
       }
       if (pattern instanceof Fail) {
         patternFunction = (function() {});
+      }
+      if (pattern instanceof Default) {
+        patternFunction = (function() {
+          return true;
+        });
       }
       this.pattern = patternFunction;
       if (typeof resultBuilder === 'function') {
@@ -141,7 +163,7 @@
 
 //# sourceMappingURL=maps\case.js.map
 
-},{"./arrayUtil":1,"./atom":2,"./fail":6}],5:[function(require,module,exports){
+},{"./Default":1,"./arrayUtil":2,"./atom":3,"./fail":8}],6:[function(require,module,exports){
 (function() {
   var Case, caseFactory;
 
@@ -169,7 +191,9 @@
 
 //# sourceMappingURL=maps\caseFactory.js.map
 
-},{"./case":4}],6:[function(require,module,exports){
+},{"./case":5}],7:[function(require,module,exports){
+module.exports=require(1)
+},{"D:\\Erich\\workspace\\patternmatchingjs\\compiled\\Default.js":1}],8:[function(require,module,exports){
 (function() {
   var Fail;
 
@@ -184,19 +208,19 @@
 
 //# sourceMappingURL=maps\fail.js.map
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function() {
-  var Fail;
+  var Default, Fail;
 
   Fail = require('./fail');
+
+  Default = require('./default');
 
   module.exports = {
     match: require('./match'),
     "case": require('./caseFactory'),
     atom: require('./atomFactory'),
-    "default": function() {
-      return true;
-    },
+    "default": new Default(),
     fail: new Fail(),
     type: require('./type')
   };
@@ -205,7 +229,7 @@
 
 //# sourceMappingURL=maps\index.js.map
 
-},{"./atomFactory":3,"./caseFactory":5,"./fail":6,"./match":8,"./type":9}],8:[function(require,module,exports){
+},{"./atomFactory":4,"./caseFactory":6,"./default":7,"./fail":8,"./match":10,"./type":11}],10:[function(require,module,exports){
 (function() {
   var Case, Fail, caseFactory, fail, match;
 
@@ -238,7 +262,7 @@
 
 //# sourceMappingURL=maps\match.js.map
 
-},{"./case":4,"./caseFactory":5,"./fail":6}],9:[function(require,module,exports){
+},{"./case":5,"./caseFactory":6,"./fail":8}],11:[function(require,module,exports){
 (function() {
   module.exports = function(t) {
     return function(value) {
@@ -250,7 +274,7 @@
 
 //# sourceMappingURL=maps\type.js.map
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("A case", function() {
@@ -282,7 +306,7 @@ describe("A case", function() {
     expect(f3456(6)).toBe(6);
   });
 });
-},{"../compiled/index":7}],11:[function(require,module,exports){
+},{"../compiled/index":9}],13:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("The default behaviour", function() {
@@ -360,7 +384,7 @@ describe("The default behaviour", function() {
     expect(failed(true)).toBeUndefined();
   });
 });
-},{"../compiled/index":7}],12:[function(require,module,exports){
+},{"../compiled/index":9}],14:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("Fatorial", function() {
@@ -403,7 +427,7 @@ describe("Fatorial", function() {
     expect(fat(5)).toBe(120);
   });
 });
-},{"../compiled/index":7}],13:[function(require,module,exports){
+},{"../compiled/index":9}],15:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("A pattern matching", function() {
@@ -416,7 +440,7 @@ describe("A pattern matching", function() {
     expect(PM.type).toBeDefined();
   });
 });
-},{"../compiled/index":7}],14:[function(require,module,exports){
+},{"../compiled/index":9}],16:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("The order", function() {
@@ -477,4 +501,4 @@ describe("The order", function() {
     expect(case3(case9)(case3Function)(3)).toBe(-1);
   });
 });
-},{"../compiled/index":7}]},{},[10,11,12,13,14]);
+},{"../compiled/index":9}]},{},[12,13,14,15,16]);

@@ -1,5 +1,6 @@
 Atom = require('./atom')
 Fail = require('./fail')
+Default = require('./Default')
 ArrayUtil = require('./arrayUtil')
 class Case
   constructor:(pattern,resultBuilder,left) ->
@@ -14,6 +15,7 @@ class Case
     patternFunction = ((i) ->i==pattern.value) if pattern instanceof Atom
     patternFunction = ((i) -> pattern.test(i)) if pattern instanceof RegExp
     patternFunction = (()->) if pattern instanceof Fail
+    patternFunction = (()->true) if pattern instanceof Default
     @pattern = patternFunction
     if typeof resultBuilder == 'function'
       @resultBuilder = resultBuilder
