@@ -54,4 +54,24 @@ describe("The default behaviour", function() {
       return str;
     }))).toBeUndefined();
   });
+  it("must handle array", function() {
+    var array = [1, 2];
+    var case1_2 = PM.case([1, 2], true);
+    var case1_3 = PM.case([1, 3], true);
+    expect(case1_2(array)).toBe(true);
+    expect(case1_3(array)).toBeUndefined();
+  });
+  it("must handle types", function() {
+    function MyType() {};
+
+    function OtherType() {};
+
+    var isInstanceOf = PM.case(PM.type(MyType), true);
+    expect(isInstanceOf(new MyType())).toBe(true);
+    expect(isInstanceOf(new OtherType())).toBeUndefined();
+  });
+  it("must support failed cases", function() {
+    var failed = PM.case(PM.fail, true);
+    expect(failed(true)).toBeUndefined();
+  });
 });

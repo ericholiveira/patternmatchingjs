@@ -1,5 +1,15 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
+  module.exports.isArray = Array.isArray || function(value) {
+    return {}.toString.call(value) === '[object Array]';
+  };
+
+}).call(this);
+
+//# sourceMappingURL=maps\arrayUtil.js.map
+
+},{}],2:[function(require,module,exports){
+(function() {
   var Atom;
 
   module.exports = Atom = (function() {
@@ -15,7 +25,7 @@
 
 //# sourceMappingURL=maps\atom.js.map
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function() {
   var Atom;
 
@@ -29,15 +39,17 @@
 
 //# sourceMappingURL=maps\atomFactory.js.map
 
-},{"./atom":1}],3:[function(require,module,exports){
+},{"./atom":2}],4:[function(require,module,exports){
 (function() {
-  var Atom, Case, ComposedCase, Fail,
+  var ArrayUtil, Atom, Case, ComposedCase, Fail,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Atom = require('./atom');
 
   Fail = require('./fail');
+
+  ArrayUtil = require('./arrayUtil');
 
   Case = (function() {
     function Case(pattern, resultBuilder, left) {
@@ -46,6 +58,21 @@
       patternFunction = function(i) {
         return i==pattern;
       };
+      if (ArrayUtil.isArray(pattern)) {
+        patternFunction = function(arr) {
+          var a, i, _i, _len;
+          if (arr.length !== pattern.length) {
+            return false;
+          }
+          for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+            a = arr[i];
+            if (a !== pattern[i]) {
+              return false;
+            }
+          }
+          return true;
+        };
+      }
       if (typeof pattern === 'function') {
         patternFunction = pattern;
       }
@@ -114,7 +141,7 @@
 
 //# sourceMappingURL=maps\case.js.map
 
-},{"./atom":1,"./fail":5}],4:[function(require,module,exports){
+},{"./arrayUtil":1,"./atom":2,"./fail":6}],5:[function(require,module,exports){
 (function() {
   var Case, caseFactory;
 
@@ -142,7 +169,7 @@
 
 //# sourceMappingURL=maps\caseFactory.js.map
 
-},{"./case":3}],5:[function(require,module,exports){
+},{"./case":4}],6:[function(require,module,exports){
 (function() {
   var Fail;
 
@@ -157,7 +184,7 @@
 
 //# sourceMappingURL=maps\fail.js.map
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function() {
   var Fail;
 
@@ -170,14 +197,15 @@
     "default": function() {
       return true;
     },
-    fail: new Fail()
+    fail: new Fail(),
+    type: require('./type')
   };
 
 }).call(this);
 
 //# sourceMappingURL=maps\index.js.map
 
-},{"./atomFactory":2,"./caseFactory":4,"./fail":5,"./match":7}],7:[function(require,module,exports){
+},{"./atomFactory":3,"./caseFactory":5,"./fail":6,"./match":8,"./type":9}],8:[function(require,module,exports){
 (function() {
   var Case, Fail, caseFactory, fail, match;
 
@@ -210,7 +238,19 @@
 
 //# sourceMappingURL=maps\match.js.map
 
-},{"./case":3,"./caseFactory":4,"./fail":5}],8:[function(require,module,exports){
+},{"./case":4,"./caseFactory":5,"./fail":6}],9:[function(require,module,exports){
+(function() {
+  module.exports = function(t) {
+    return function(value) {
+      return value instanceof t;
+    };
+  };
+
+}).call(this);
+
+//# sourceMappingURL=maps\type.js.map
+
+},{}],10:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("A case", function() {
@@ -242,7 +282,7 @@ describe("A case", function() {
     expect(f3456(6)).toBe(6);
   });
 });
-},{"../compiled/index":6}],9:[function(require,module,exports){
+},{"../compiled/index":7}],11:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("The default behaviour", function() {
@@ -299,8 +339,28 @@ describe("The default behaviour", function() {
       return str;
     }))).toBeUndefined();
   });
+  it("must handle array", function() {
+    var array = [1, 2];
+    var case1_2 = PM.case([1, 2], true);
+    var case1_3 = PM.case([1, 3], true);
+    expect(case1_2(array)).toBe(true);
+    expect(case1_3(array)).toBeUndefined();
+  });
+  it("must handle types", function() {
+    function MyType() {};
+
+    function OtherType() {};
+
+    var isInstanceOf = PM.case(PM.type(MyType), true);
+    expect(isInstanceOf(new MyType())).toBe(true);
+    expect(isInstanceOf(new OtherType())).toBeUndefined();
+  });
+  it("must support failed cases", function() {
+    var failed = PM.case(PM.fail, true);
+    expect(failed(true)).toBeUndefined();
+  });
 });
-},{"../compiled/index":6}],10:[function(require,module,exports){
+},{"../compiled/index":7}],12:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("Fatorial", function() {
@@ -343,7 +403,7 @@ describe("Fatorial", function() {
     expect(fat(5)).toBe(120);
   });
 });
-},{"../compiled/index":6}],11:[function(require,module,exports){
+},{"../compiled/index":7}],13:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("A pattern matching", function() {
@@ -352,10 +412,11 @@ describe("A pattern matching", function() {
     expect(PM.match).toBeDefined();
     expect(PM.case).toBeDefined();
     expect(PM.default).toBeDefined();
-    expect(PM.default).toBeDefined();
+    expect(PM.fail).toBeDefined();
+    expect(PM.type).toBeDefined();
   });
 });
-},{"../compiled/index":6}],12:[function(require,module,exports){
+},{"../compiled/index":7}],14:[function(require,module,exports){
 var PM = require('../compiled/index');
 
 describe("The order", function() {
@@ -416,4 +477,4 @@ describe("The order", function() {
     expect(case3(case9)(case3Function)(3)).toBe(-1);
   });
 });
-},{"../compiled/index":6}]},{},[8,9,10,11,12]);
+},{"../compiled/index":7}]},{},[10,11,12,13,14]);
