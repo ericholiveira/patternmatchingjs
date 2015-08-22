@@ -4,5 +4,6 @@ module.exports = {
   case: require('./caseFactory'),
   atom: require('./atomFactory'),
   default: ()->true,
-  fail: new Fail()
+  fail: new Fail(),
+  type: require('./type')
 }
