@@ -176,22 +176,23 @@
 
 },{"./Default":1,"./arrayUtil":2,"./atom":3,"./fail":8}],6:[function(require,module,exports){
 (function() {
-  var Case, caseFactory;
+  var Case, caseFactory, resultFactory;
 
   Case = require('./case');
 
   caseFactory = function(pattern, resultBuilder) {
-    var result, _case;
-    _case = new Case(pattern, resultBuilder);
+    return resultFactory(new Case(pattern, resultBuilder));
+  };
+
+  resultFactory = function(_case) {
+    var result;
     result = function(value) {
-      if (typeof value === 'function' && value._isCase) {
-        result._case = result._case.combine(value._case);
-        return result;
+      if (typeof value === 'function' && value._case) {
+        return resultFactory(result._case.combine(value._case));
       } else {
         return result._case.test(value);
       }
     };
-    result._isCase = true;
     result._case = _case;
     return result;
   };
@@ -259,7 +260,7 @@ module.exports=require(1)
       acc = caseFactory(fail);
       for (_i = 0, _len = _cases.length; _i < _len; _i++) {
         _case = _cases[_i];
-        if (_case._isCase) {
+        if (_case._case) {
           acc = acc(_case);
         }
       }

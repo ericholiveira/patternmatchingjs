@@ -7,7 +7,7 @@ match = (value,log) ->
     _cases = [].slice.call(arguments,0)
     acc = caseFactory(fail)
     for _case in _cases
-      if _case._isCase
+      if _case._case
         acc = acc(_case)
     acc(value)
 module.exports = match
